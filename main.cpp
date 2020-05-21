@@ -3,6 +3,22 @@
 //Emilio
 //Martin
 
+/*
+    La razon por la cual
+    se ven varias interfaces es porque 
+    cada una de ellas se dedica 
+    a un proposito especifico.
+    
+    Esto es para poder mantener la consistencia ya que 
+    unas de ellas reciben parametros y otras no, al mismo
+    tiempo algunas de ellas tienen valor de retorno y otras no.
+    
+    Debido a que hay diferencias en como hacer el proceso 
+    decidimos crear diferentes interfaces para cuidar la 
+    coherencia de nuestro resultado y del proceso.
+*/
+
+
 //Agregamos librerias necesarias
 #include <iostream>
 #include <vector>
