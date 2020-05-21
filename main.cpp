@@ -160,7 +160,7 @@ public:
 };
 
 /* 
-    Creamos ConsoleRead 
+    Creamos CircularShift 
     
     La cual empieza a hacer la rotacion circular
     utilizando los datos recibidos.
