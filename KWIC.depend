@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1590086351 source:c:\users\daniel\documents\tec\10mosemestre\arquitectura\kwic\main.cpp
+	<iostream>
+	<vector>
+	<string>
+	<sstream>
+	<algorithm>
+	<iterator>
+	<ctype.h>
+
