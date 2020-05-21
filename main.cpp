@@ -1,6 +1,6 @@
 //Ian Granados
 //Andrea Tamez
-//Emilio 
+//Emilio
 //Martin
 
 //Agregamos librerias necesarias
@@ -12,6 +12,7 @@
 #include <iterator>
 #include <ctype.h>
 #include <bits/stdc++.h>
+#include <fstream>
 
 /*
     Idea es leer datos
@@ -22,11 +23,11 @@
 
 using namespace std;
 
-/* 
+/*
     Creamos clase Input Strategy
     En esta clase recibimos el vector de string que se va utilizar
-    para la transformacion. 
-    
+    para la transformacion.
+
     +execute():Vector
 */
 class InputStrategy
@@ -36,13 +37,13 @@ public:
     virtual vector<string> execute() const = 0;
 };
 
-/* 
+/*
     Creamos clase TransformStrategy
-    En esta clase se hace la transformacion. 
-    
+    En esta clase se hace la transformacion.
+
     Recibimos los datos para poder creaer la transformacion
     adecuada.
-    
+
     +execute(data):Vector
 */
 class TransformStrategy
@@ -52,14 +53,14 @@ public:
     virtual vector<string> execute(vector<string> data) const = 0;
 };
 
-/* 
+/*
     Creamos clase Output Strategy
-    En esta clase que se tiene lo que se 
+    En esta clase que se tiene lo que se
     imprimir.
-    
+
     Recibimos los datos para poder creaer el output
     adecuado.
-    
+
     +execute(data)
 */
 class OutputStrategy
@@ -69,8 +70,8 @@ public:
     virtual void execute(vector<string> data) const = 0;
 };
 
-/* 
-    Creamos clase KWIC 
+/*
+    Creamos clase KWIC
     la cual utiliza todas las clases creadas.
 
     Recibe el input por medio de la clase Input Strategy.
@@ -124,9 +125,9 @@ public:
 };
 
 
-/* 
-    Creamos ConsoleRead 
-    la cual recibe lo que queremos leer 
+/*
+    Creamos ConsoleRead
+    la cual recibe lo que queremos leer
     para utilizarlo en nuestro programa.
 */
 class ConsoleRead : public InputStrategy
@@ -143,9 +144,36 @@ public:
     }
 };
 
-/* 
-    Creamos ConsoleRead 
-    
+/*
+    Input Strategy from file
+*/
+class FileRead : public InputStrategy
+{
+public:
+    vector<string> execute() const override {
+        vector<string> data;
+        string fileName;
+
+        cout << "file name pls: ";
+        cin >> fileName;
+        ifstream in(fileName);
+
+        if(!in) {
+            cout << "Cannot open input file" << endl;
+            return data;
+        }
+
+        string line;
+        while (getline(in, line);) {
+            data.push_back(line);
+        }
+        return data;
+    }
+};
+
+/*
+    Creamos CircularShift
+
     La cual empieza a hacer la rotacion circular
     utilizando los datos recibidos.
 */
@@ -192,9 +220,9 @@ public:
         return aux;
     }
 };
-/* 
+/*
     Creamos clase Aplphbetical Order
-    
+
     que sortea los strings que tenemos.
 */
 class AlphabeticalOrder : public TransformStrategy
@@ -206,9 +234,9 @@ public:
        return data;
     }
 };
-/* 
+/*
     Creamos ConsolePrint
-    
+
     la cual imprime lo que tenemos del Output Strategy
 */
 class ConsolePrint : public OutputStrategy
