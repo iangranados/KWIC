@@ -1,3 +1,9 @@
+//Ian Granados
+//Andrea Tamez
+//Emilio 
+//Martin
+
+//Agregamos librerias necesarias
 #include <iostream>
 #include <vector>
 #include <string>
@@ -7,8 +13,22 @@
 #include <ctype.h>
 #include <bits/stdc++.h>
 
+/*
+    Idea es leer datos
+    Procesar Oraciones
+    Ordenarlas
+    y Imprimir el Output
+*/
+
 using namespace std;
 
+/* 
+    Creamos clase Input Strategy
+    En esta clase recibimos el vector de string que se va utilizar
+    para la transformacion. 
+    
+    +execute():Vector
+*/
 class InputStrategy
 {
 public:
@@ -16,6 +36,15 @@ public:
     virtual vector<string> execute() const = 0;
 };
 
+/* 
+    Creamos clase TransformStrategy
+    En esta clase se hace la transformacion. 
+    
+    Recibimos los datos para poder creaer la transformacion
+    adecuada.
+    
+    +execute(data):Vector
+*/
 class TransformStrategy
 {
 public:
@@ -23,6 +52,16 @@ public:
     virtual vector<string> execute(vector<string> data) const = 0;
 };
 
+/* 
+    Creamos clase Output Strategy
+    En esta clase que se tiene lo que se 
+    imprimir.
+    
+    Recibimos los datos para poder creaer el output
+    adecuado.
+    
+    +execute(data)
+*/
 class OutputStrategy
 {
 public:
@@ -30,6 +69,15 @@ public:
     virtual void execute(vector<string> data) const = 0;
 };
 
+/* 
+    Creamos clase KWIC 
+    la cual utiliza todas las clases creadas.
+
+    Recibe el input por medio de la clase Input Strategy.
+    El proceso y el orden de la transformacion proviene de la clase
+    TransformStrategy.
+    Y el Output proviene del Output strategy.
+*/
 class KWIC
 {
 private:
@@ -75,6 +123,12 @@ public:
     }
 };
 
+
+/* 
+    Creamos ConsoleRead 
+    la cual recibe lo que queremos leer 
+    para utilizarlo en nuestro programa.
+*/
 class ConsoleRead : public InputStrategy
 {
 public:
@@ -89,6 +143,12 @@ public:
     }
 };
 
+/* 
+    Creamos ConsoleRead 
+    
+    La cual empieza a hacer la rotacion circular
+    utilizando los datos recibidos.
+*/
 class CircularShift : public TransformStrategy
 {
 public:
@@ -108,19 +168,19 @@ public:
 
         string current;
         for(vector<string>::iterator i=data.begin(); i!=data.end(); ++i) {
-            // string to lower case
+            // String a Minuscula
             current = this->toLowerCase(*i);
 
-            // Insert original
+            // Inserto el Original
             aux.push_back(current);
 
-            // string to vector
+            // String a Vector
             stringstream ss(current);
             istream_iterator<string> begin(ss);
             istream_iterator<string> end;
             vector<string> separatedLine(begin, end);
 
-            // Rotate and insert each one
+            // Roto y inserto cada una
             for (int j = 1; j < separatedLine.size(); ++j) {
                 rotate(separatedLine.begin(), separatedLine.begin()+1, separatedLine.end());
                 current = "";
@@ -132,7 +192,11 @@ public:
         return aux;
     }
 };
-
+/* 
+    Creamos clase Aplphbetical Order
+    
+    que sortea los strings que tenemos.
+*/
 class AlphabeticalOrder : public TransformStrategy
 {
 public:
@@ -142,7 +206,11 @@ public:
        return data;
     }
 };
-
+/* 
+    Creamos ConsolePrint
+    
+    la cual imprime lo que tenemos del Output Strategy
+*/
 class ConsolePrint : public OutputStrategy
 {
 public:
