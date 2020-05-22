@@ -202,9 +202,9 @@ class CircularShift : public TransformStrategy
 public:
     vector<string> execute(vector<string> data) const override {
         vector<string> aux;
-        
+        string current;
         for(vector<string>::iterator i=data.begin(); i!=data.end(); ++i) {
-   
+            current = *i;
             // Inserto el Original
             aux.push_back(current);
 
@@ -245,11 +245,10 @@ public:
         }
         return data;
     }
-    
+
     vector<string> execute(vector<string> data) const override {
-		string current;
         for(vector<string>::iterator i=data.begin(); i!=data.end(); ++i) {
-            current = this->toLowerCase(*i);
+            *i = this->toLowerCase(*i);
         }
 
        int num;
@@ -336,7 +335,7 @@ int main()
     system->setInput(new FileRead);
     system->setProcess(new StopWords);
     system->setOrder(new AlphabeticalOrder);
-    system->setOutput(new FilePrint);
+    system->setOutput(new ConsolePrint);
 
     system->execute();
 
