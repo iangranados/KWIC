@@ -249,11 +249,52 @@ class AlphabeticalOrder : public TransformStrategy
 {
 public:
     vector<string> execute(vector<string> data) const override {
-       sort(data.begin(), data.end());
+       int num;
+       cout << "Quieres que tu sort sea Ascendente o Descendente?" << endl;
+       cout << "1 para Ascendente / 2 para Descendente" << endl;
+       cin >> num;
+
+       if (num == 2){
+           sort(data.begin(), data.end());
+           reverse(data.begin(), data.end());
+       }
+       else{
+            //No escogio lo hago ascendente
+            sort(data.begin(), data.end());
+       }
 
        return data;
     }
 };
+
+class StopWords : public TransformStrategy
+{
+public:
+    vector<string> execute(vector<string> data) const override {
+        string ans;
+        cout << "quieres usar stop words? (y/n): ";
+        cin >> ans;
+        if (ans == "y") {
+            InputStrategy* stopStrat = new FileRead;
+            vector<string> stops = stopStrat->execute();
+
+            // Remove from every data string, any ocurrence of the stop
+            for(int i=0; i < data.size(); ++i) {
+                for(int j = 0; j < stops.size(); ++j) {
+                    while (data[i].find(stops[j]) != -1) {
+                        data[i].replace(data[i].find(stops[j]), stops[j].length(), "");
+                    }
+                }
+            }
+
+            return data;
+        } else {
+            return data;
+        }
+    }
+};
+
+
 /*
     Creamos ConsolePrint
 
@@ -291,7 +332,7 @@ int main()
 {
     KWIC* system = new KWIC();
     system->setInput(new FileRead);
-    system->setProcess(new CircularShift);
+    system->setProcess(new StopWords);
     system->setOrder(new AlphabeticalOrder);
     system->setOutput(new FilePrint);
 
