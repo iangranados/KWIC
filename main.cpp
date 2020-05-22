@@ -168,6 +168,8 @@ public:
         data = this->process_2->execute(data);
         data = this->process_3->execute(data);
         data = this->order_->execute(data);
+        this->output_->execute(data);
+        data = this->process_->execute(data);
         this->output_2->execute(data);
     }
 };
