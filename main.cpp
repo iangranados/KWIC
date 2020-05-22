@@ -200,25 +200,11 @@ public:
 class CircularShift : public TransformStrategy
 {
 public:
-    string toLowerCase(string data) const{
-        int i = 0;
-        char c;
-        while( data[i]) {
-            c = data[i];
-            data[i] = tolower(c);
-            i++;
-        }
-        return data;
-    }
-
     vector<string> execute(vector<string> data) const override {
         vector<string> aux;
-
-        string current;
+        
         for(vector<string>::iterator i=data.begin(); i!=data.end(); ++i) {
-            // String a Minuscula
-            current = this->toLowerCase(*i);
-
+   
             // Inserto el Original
             aux.push_back(current);
 
@@ -248,7 +234,24 @@ public:
 class AlphabeticalOrder : public TransformStrategy
 {
 public:
+
+    string toLowerCase(string data) const{
+        int i = 0;
+        char c;
+        while( data[i]) {
+            c = data[i];
+            data[i] = tolower(c);
+            i++;
+        }
+        return data;
+    }
+    
     vector<string> execute(vector<string> data) const override {
+		string current;
+        for(vector<string>::iterator i=data.begin(); i!=data.end(); ++i) {
+            current = this->toLowerCase(*i);
+        }
+
        int num;
        cout << "Quieres que tu sort sea Ascendente o Descendente?" << endl;
        cout << "1 para Ascendente / 2 para Descendente" << endl;
@@ -293,7 +296,6 @@ public:
         }
     }
 };
-
 
 /*
     Creamos ConsolePrint
