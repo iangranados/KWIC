@@ -27,7 +27,7 @@
 #include <algorithm>
 #include <iterator>
 #include <ctype.h>
-#include <bits/stdc++.h>
+#include "stdc++.h"
 #include <fstream>
 
 /*
