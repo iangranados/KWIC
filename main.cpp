@@ -249,7 +249,22 @@ class AlphabeticalOrder : public TransformStrategy
 {
 public:
     vector<string> execute(vector<string> data) const override {
-       sort(data.begin(), data.end());
+       int num;
+       cout << "Quieres que tu sort sea Ascendente o Descendente? << endl;
+       cout << "Da click 1 si deseas de sea ascencente Da click 2 si quieres que sea descendente" << endl;
+       cin << num << endl;
+   
+       if(num == 1){
+        sort(data.begin(), data.end());
+       }
+       else of(num == 2){
+           sort(data.begin(), data.end());
+           reverse(data.begin(), data.end();
+       }
+       else{
+            //No escogio lo hago ascendente
+            sort(data.begin(), data.end());
+       }
 
        return data;
     }
