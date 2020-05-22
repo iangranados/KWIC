@@ -210,6 +210,47 @@ public:
 };
 
 /*
+    Creamos RemoveLines
+
+    La cual es capaz de obtener una serie de digitos
+    que representan las líneas que el usuario quiere borrar
+*/
+class RemoveLines : public TransformStrategy
+{
+public:
+vector<string> execute(vector<string> data) const override {
+    vector<int> linesToRemove;
+    int num;
+    cout << "Ingresa las los números de líneas que te gustaría borrar (-1 para terminar)" << endl;
+    cin >> num;
+    while((int)num != -1) {
+        cout << num << (int) num << ((int) num != -1) << " ejemploooo " << endl;
+        linesToRemove.push_back((int)num);
+        cin >> num;
+    }
+    cout << "finished..." << endl;
+    for(vector<int>::iterator i=linesToRemove.begin(); i!=linesToRemove.end(); ++i) {
+        cout << *i << endl;        
+    }
+
+    cout << (find(linesToRemove.begin(), linesToRemove.end(), 1) == linesToRemove.end()) << endl;
+    
+    vector<string> newData;
+    int lineCount = 0;
+    for(vector<string>::iterator i=data.begin(); i!=data.end(); ++i) {
+        if (find(linesToRemove.begin(), linesToRemove.end(), lineCount+1) == linesToRemove.end()){
+            cout << *i << endl;
+        } else {
+            cout << "removing '" <<  *i << "' que representa la línea número " << lineCount+1 << endl; 
+        }
+        lineCount++;
+    }
+}
+    
+    // cout << "1 para Ascendente / 2 para Descendente" << endl;
+    
+};
+/*
     Creamos CircularShift
 
     La cual empieza a hacer la rotacion circular
