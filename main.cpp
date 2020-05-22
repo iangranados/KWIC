@@ -39,6 +39,17 @@
 
 using namespace std;
 
+string toLowerCase(string data){
+    int i = 0;
+    char c;
+    while( data[i]) {
+        c = data[i];
+        data[i] = tolower(c);
+        i++;
+    }
+    return data;
+}
+
 /*
     Creamos clase Input Strategy
     En esta clase recibimos el vector de string que se va utilizar
@@ -100,12 +111,14 @@ class KWIC
 private:
     InputStrategy* input_;
     TransformStrategy* process_;
+    TransformStrategy* process_2;
     TransformStrategy* order_;
     OutputStrategy* output_;
 public:
-    KWIC(InputStrategy* input = nullptr, TransformStrategy* process = nullptr, TransformStrategy* order = nullptr, OutputStrategy* output = nullptr) {
+    KWIC(InputStrategy* input = nullptr, TransformStrategy* process = nullptr, TransformStrategy* process2 = nullptr, TransformStrategy* order = nullptr, OutputStrategy* output = nullptr) {
         input_ = input;
         process_ = process;
+        process_2 = process2;
         order_ = order;
         output_ = output;
     }
@@ -123,6 +136,10 @@ public:
         delete this->process_;
         this->process_ = process;
     }
+    void setProcess2(TransformStrategy* process) {
+        delete this->process_2;
+        this->process_2 = process;
+    }
     void setOrder(TransformStrategy* order) {
         delete this->order_;
         this->order_ = order;
@@ -135,6 +152,7 @@ public:
         vector<string> data;
         data = this->input_->execute();
         data = this->process_->execute(data);
+        data = this->process_2->execute(data);
         data = this->order_->execute(data);
         this->output_->execute(data);
     }
@@ -235,20 +253,9 @@ class AlphabeticalOrder : public TransformStrategy
 {
 public:
 
-    string toLowerCase(string data) const{
-        int i = 0;
-        char c;
-        while( data[i]) {
-            c = data[i];
-            data[i] = tolower(c);
-            i++;
-        }
-        return data;
-    }
-
     vector<string> execute(vector<string> data) const override {
         for(vector<string>::iterator i=data.begin(); i!=data.end(); ++i) {
-            *i = this->toLowerCase(*i);
+            *i = toLowerCase(*i);
         }
 
        int num;
@@ -277,19 +284,33 @@ public:
         cout << "quieres usar stop words? (y/n): ";
         cin >> ans;
         if (ans == "y") {
+            vector<string> aux;
+
+            // Get stop words from file
             InputStrategy* stopStrat = new FileRead;
             vector<string> stops = stopStrat->execute();
 
             // Remove from every data string, any ocurrence of the stop
             for(int i=0; i < data.size(); ++i) {
-                for(int j = 0; j < stops.size(); ++j) {
-                    while (data[i].find(stops[j]) != -1) {
-                        data[i].replace(data[i].find(stops[j]), stops[j].length(), "");
+                // String a Vector
+                stringstream ss(data[i]);
+                istream_iterator<string> begin(ss);
+                istream_iterator<string> end;
+                vector<string> separatedLine(begin, end);
+
+                for(int j=0; j < separatedLine.size(); j++) {
+                    if(find(stops.begin(), stops.end(), toLowerCase(separatedLine[j])) != stops.end()) {
+                        separatedLine.erase(separatedLine.begin() + j);
+                        j--;
                     }
                 }
+                string current = "";
+                for (vector<string>::iterator it=separatedLine.begin(); it!=separatedLine.end(); ++it)
+                    current += *it + ' ';
+                aux.push_back(current);
             }
 
-            return data;
+            return aux;
         } else {
             return data;
         }
@@ -334,8 +355,9 @@ int main()
     KWIC* system = new KWIC();
     system->setInput(new FileRead);
     system->setProcess(new StopWords);
+    system->setProcess2(new CircularShift);
     system->setOrder(new AlphabeticalOrder);
-    system->setOutput(new ConsolePrint);
+    system->setOutput(new FilePrint);
 
     system->execute();
 
