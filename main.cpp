@@ -112,15 +112,19 @@ private:
     InputStrategy* input_;
     TransformStrategy* process_;
     TransformStrategy* process_2;
+    TransformStrategy* process_3;
     TransformStrategy* order_;
     OutputStrategy* output_;
+    OutputStrategy* output_2;
 public:
-    KWIC(InputStrategy* input = nullptr, TransformStrategy* process = nullptr, TransformStrategy* process2 = nullptr, TransformStrategy* order = nullptr, OutputStrategy* output = nullptr) {
+    KWIC(InputStrategy* input = nullptr, TransformStrategy* process = nullptr, TransformStrategy* process2 = nullptr, TransformStrategy* process3 = nullptr, TransformStrategy* order = nullptr, OutputStrategy* output = nullptr, OutputStrategy* output2 = nullptr) {
         input_ = input;
         process_ = process;
         process_2 = process2;
+        process_3 = process3;
         order_ = order;
         output_ = output;
+        output_2 = output2;
     }
     ~KWIC() {
         delete this->input_;
@@ -140,6 +144,10 @@ public:
         delete this->process_2;
         this->process_2 = process;
     }
+    void setProcess3(TransformStrategy* process) {
+        delete this->process_3;
+        this->process_3 = process;
+    }
     void setOrder(TransformStrategy* order) {
         delete this->order_;
         this->order_ = order;
@@ -148,13 +156,19 @@ public:
         delete this->output_;
         this->output_ = output;
     }
+    void setOutput2(OutputStrategy* output) {
+        delete this->output_2;
+        this->output_2 = output;
+    }
     void execute() const {
         vector<string> data;
         data = this->input_->execute();
+        this->output_->execute(data);
         data = this->process_->execute(data);
         data = this->process_2->execute(data);
+        data = this->process_3->execute(data);
         data = this->order_->execute(data);
-        this->output_->execute(data);
+        this->output_2->execute(data);
     }
 };
 
@@ -218,37 +232,27 @@ public:
 class RemoveLines : public TransformStrategy
 {
 public:
-vector<string> execute(vector<string> data) const override {
-    vector<int> linesToRemove;
-    int num;
-    cout << "Ingresa las los números de líneas que te gustaría borrar (-1 para terminar)" << endl;
-    cin >> num;
-    while((int)num != -1) {
-        cout << num << (int) num << ((int) num != -1) << " ejemploooo " << endl;
-        linesToRemove.push_back((int)num);
+    vector<string> execute(vector<string> data) const override {
+        vector<int> linesToRemove;
+        int num;
+        cout << "Ingresa las los números de líneas que te gustaría borrar (-1 para terminar)" << endl;
         cin >> num;
-    }
-    cout << "finished..." << endl;
-    for(vector<int>::iterator i=linesToRemove.begin(); i!=linesToRemove.end(); ++i) {
-        cout << *i << endl;        
+        while((int)num != -1) {
+            linesToRemove.push_back((int)num);
+            cin >> num;
+        }
+
+        vector<string> newData;
+        int lineCount = 0;
+        for(vector<string>::iterator i=data.begin(); i!=data.end(); ++i) {
+            if (find(linesToRemove.begin(), linesToRemove.end(), lineCount+1) == linesToRemove.end()){
+                newData.push_back(*i);
+            }
+            lineCount++;
+        }
+        return newData;
     }
 
-    cout << (find(linesToRemove.begin(), linesToRemove.end(), 1) == linesToRemove.end()) << endl;
-    
-    vector<string> newData;
-    int lineCount = 0;
-    for(vector<string>::iterator i=data.begin(); i!=data.end(); ++i) {
-        if (find(linesToRemove.begin(), linesToRemove.end(), lineCount+1) == linesToRemove.end()){
-            cout << *i << endl;
-        } else {
-            cout << "removing '" <<  *i << "' que representa la línea número " << lineCount+1 << endl; 
-        }
-        lineCount++;
-    }
-}
-    
-    // cout << "1 para Ascendente / 2 para Descendente" << endl;
-    
 };
 /*
     Creamos CircularShift
@@ -395,10 +399,12 @@ int main()
 {
     KWIC* system = new KWIC();
     system->setInput(new FileRead);
-    system->setProcess(new StopWords);
-    system->setProcess2(new CircularShift);
+    system->setProcess(new RemoveLines);
+    system->setProcess2(new StopWords);
+    system->setProcess3(new CircularShift);
     system->setOrder(new AlphabeticalOrder);
-    system->setOutput(new FilePrint);
+    system->setOutput(new ConsolePrint);
+    system->setOutput2(new FilePrint);
 
     system->execute();
 
