@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1590086351 source:c:\users\daniel\documents\tec\10mosemestre\arquitectura\kwic\main.cpp
+1590109162 source:c:\users\daniel\documents\tec\10mosemestre\arquitectura\kwic\main.cpp
 	<iostream>
 	<vector>
 	<string>
@@ -7,4 +7,6 @@
 	<algorithm>
 	<iterator>
 	<ctype.h>
+	<bits/stdc++.h>
+	<fstream>
 

@@ -5,16 +5,16 @@
 
 /*
     La razon por la cual
-    se ven varias interfaces es porque 
-    cada una de ellas se dedica 
+    se ven varias interfaces es porque
+    cada una de ellas se dedica
     a un proposito especifico.
-    
-    Esto es para poder mantener la consistencia ya que 
+
+    Esto es para poder mantener la consistencia ya que
     unas de ellas reciben parametros y otras no, al mismo
     tiempo algunas de ellas tienen valor de retorno y otras no.
-    
-    Debido a que hay diferencias en como hacer el proceso 
-    decidimos crear diferentes interfaces para cuidar la 
+
+    Debido a que hay diferencias en como hacer el proceso
+    decidimos crear diferentes interfaces para cuidar la
     coherencia de nuestro resultado y del proceso.
 */
 
@@ -172,6 +172,7 @@ public:
 
         cout << "file name pls: ";
         cin >> fileName;
+        cout << endl;
         ifstream in(fileName);
 
         if(!in) {
@@ -180,9 +181,12 @@ public:
         }
 
         string line;
-        while (getline(in, line);) {
+        while (getline(in, line)) {
             data.push_back(line);
         }
+
+        in.close();
+
         return data;
     }
 };
@@ -264,13 +268,32 @@ public:
     }
 };
 
+/*
+    Imprime en un archivo
+*/
+class FilePrint : public OutputStrategy
+{
+public:
+    void execute(vector<string> data) const override {
+        string outputName;
+        cout << "nombre de output pls: ";
+        cin >> outputName;
+        ofstream outputFile(outputName);
+
+        for(vector<string>::iterator it=data.begin(); it!=data.end(); ++it)
+            outputFile << *it << endl;
+
+        outputFile.close();
+    }
+};
+
 int main()
 {
     KWIC* system = new KWIC();
-    system->setInput(new ConsoleRead);
+    system->setInput(new FileRead);
     system->setProcess(new CircularShift);
     system->setOrder(new AlphabeticalOrder);
-    system->setOutput(new ConsolePrint);
+    system->setOutput(new FilePrint);
 
     system->execute();
 
