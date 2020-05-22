@@ -251,7 +251,7 @@ public:
     vector<string> execute(vector<string> data) const override {
        int num;
        cout << "Quieres que tu sort sea Ascendente o Descendente? << endl;
-       cout << "Da click 1 si deseas de sea ascencente Da click 2 si quieres que sea descendente" << endl;
+       cout << "Presiona 1 si deseas de sea ascencente, presiona 2 si quieres que sea descendente" << endl;
        cin << num << endl;
    
        if(num == 1){
