@@ -272,6 +272,7 @@ public:
        return data;
     }
 };
+
 /*
     Creamos ConsolePrint
 
